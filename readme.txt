@@ -4,7 +4,7 @@ Tags: user switching, development, testing, roles, capabilities
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.1.2
+Stable tag: 1.1.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,11 +31,12 @@ When you are building a plugin, you often need to jump between an admin account 
 
 = Admin bar panel =
 
-* **Switch User** menu on all wp-admin screens
+* **Switch User** menu on all wp-admin screens — opens on hover
 * **Pinned** and **All users** tabs
 * Search all users by username or email
 * Infinite scroll loading (20 users at a time)
-* Each row shows avatar, role, login, and a **Switch To** action
+* Each row shows avatar, name, role, login, email, and a **Switch To** action
+* Click a user row to open their profile; use **Switch To** to switch accounts
 * Fixed-height, scrollable panel (no full-screen dropdown)
 
 = Profile & user screens =
@@ -85,6 +86,17 @@ Multisite is not a priority for v1. It may work incidentally but is not tested o
 
 == Changelog ==
 
+= 1.1.5 =
+* Fix admin bar panel JavaScript error that showed "No users found"
+
+= 1.1.4 =
+* Show login and email on separate lines so long addresses are not truncated
+
+= 1.1.3 =
+* Open Switch User panel on hover instead of click
+* Compact admin bar panel layout with email and role per user
+* Click a user row to open their profile; use Switch To to switch accounts
+
 = 1.1.2 =
 * Add Switch Off to the admin bar profile menu when logged in as admin (not while switched)
 
@@ -121,6 +133,15 @@ Multisite is not a priority for v1. It may work incidentally but is not tested o
 * Initial release: standalone switching, pinning, admin bar menu, settings page, Users list row actions
 
 == Upgrade Notice ==
+
+= 1.1.5 =
+Fixes the admin bar user list failing to load.
+
+= 1.1.4 =
+User emails in the Switch User panel no longer get cut off.
+
+= 1.1.3 =
+Switch User panel opens on hover; clicking a user opens their profile.
 
 = 1.1.2 =
 Switch Off is now available in the profile menu on the top-right admin bar.
