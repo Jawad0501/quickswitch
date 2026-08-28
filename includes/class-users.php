@@ -14,7 +14,7 @@ final class QSwitch_Users {
 	public const PAGE_SIZE = 20;
 
 	/**
-	 * @return array{id:int,display_name:string,user_login:string,user_email:string,role:string,avatar:string,pinned:bool,switch_url:string,pin_url:string,unpin_url:string}
+	 * @return array{id:int,display_name:string,user_login:string,user_email:string,role:string,avatar:string,pinned:bool,profile_url:string,switch_url:string,pin_url:string,unpin_url:string}
 	 */
 	public static function format_user( WP_User $user ): array {
 		$roles      = $user->roles;
@@ -35,6 +35,7 @@ final class QSwitch_Users {
 			'role'         => $role_label,
 			'avatar'       => get_avatar_url( $user_id, array( 'size' => 64 ) ),
 			'pinned'       => $pinned,
+			'profile_url'  => get_edit_user_link( $user_id, 'raw' ),
 			'switch_url'   => QSwitch_Switching::switch_to_url( $user_id ),
 			'pin_url'      => $pinned ? '' : QSwitch_Pins::pin_url( $user_id ),
 			'unpin_url'    => $pinned ? QSwitch_Pins::unpin_url( $user_id ) : '',

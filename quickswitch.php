@@ -3,7 +3,7 @@
  * Plugin Name:       QuickSwitch
  * Plugin URI:        https://github.com/jawad0501/quickswitch
  * Description:       Pin test users and switch between accounts in one click while developing WordPress plugins.
- * Version:           1.1.0
+ * Version:           1.1.5
  * Author:            jawad0501
  * Author URI:        https://profiles.wordpress.org/jawad0501/
  * License:           GPL v2 or later
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'QSWITCH_VERSION', '1.1.0' );
+define( 'QSWITCH_VERSION', '1.1.5' );
 define( 'QSWITCH_FILE', __FILE__ );
 define( 'QSWITCH_PATH', plugin_dir_path( __FILE__ ) );
 define( 'QSWITCH_META_KEY', 'qswitch_pinned_users' );

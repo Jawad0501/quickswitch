@@ -11,6 +11,7 @@
 		open: false,
 	};
 	var requestSeq = 0;
+	var closeTimer = null;
 	var debouncedFetchUsers = debounce(function () {
 		fetchUsers(true);
 	}, 250);
@@ -103,19 +104,37 @@
 				encodeURIComponent(window.location.href);
 		}
 
-		var subBits = [];
-		if (user.user_login) {
-			subBits.push(el('span', { text: '@' + user.user_login }));
-		}
-		if (user.role) {
-			subBits.push(el('span', { className: 'qswitch-user__role', text: user.role }));
-		}
+		var profileUrl = user.profile_url || '#';
+		var label = user.display_name || user.user_login;
 
 		var nameChildren = [];
 		if (user.pinned) {
 			nameChildren.push(el('span', { className: 'qswitch-user__pin', text: '★ ' }));
 		}
-		nameChildren.push(document.createTextNode(user.display_name || user.user_login));
+		nameChildren.push(document.createTextNode(label));
+
+		var nameRowChildren = [
+			el('span', { className: 'qswitch-user__name', title: label }, nameChildren),
+		];
+		if (user.role) {
+			nameRowChildren.push(el('span', { className: 'qswitch-user__role', text: user.role }));
+		}
+
+		var metaChildren = [
+			el('div', { className: 'qswitch-user__name-row' }, nameRowChildren),
+		];
+
+		if (user.user_login) {
+			metaChildren.push(
+				el('div', { className: 'qswitch-user__login', text: '@' + user.user_login })
+			);
+		}
+
+		if (user.user_email) {
+			metaChildren.push(
+				el('div', { className: 'qswitch-user__email', text: user.user_email, title: user.user_email })
+			);
+		}
 
 		var showPin = state.tab === 'all' && !user.pinned && user.pin_url;
 		var showUnpin = state.tab === 'pinned' && user.pinned && user.unpin_url;
@@ -147,7 +166,7 @@
 			el('a', {
 				className: 'qswitch-user__switch-link',
 				href: switchUrl,
-				title: (cfg.i18n.switchTo || 'Switch to') + ' ' + (user.display_name || user.user_login),
+				title: (cfg.i18n.switchTo || 'Switch to') + ' ' + label,
 				text: cfg.i18n.switchTo || 'Switch To',
 			})
 		);
@@ -157,23 +176,20 @@
 				'a',
 				{
 					className: 'qswitch-user__main',
-					href: switchUrl,
-					title: (cfg.i18n.switchTo || 'Switch to') + ' ' + (user.display_name || user.user_login),
+					href: profileUrl,
+					title: label,
 				},
 				[
 					el('div', { className: 'qswitch-user__avatar' }, [
 						el('img', {
 							src: user.avatar || '',
 							alt: '',
-							width: '32',
-							height: '32',
+							width: '28',
+							height: '28',
 							loading: 'lazy',
 						}),
 					]),
-					el('div', { className: 'qswitch-user__meta' }, [
-						el('span', { className: 'qswitch-user__name' }, nameChildren),
-						el('div', { className: 'qswitch-user__sub' }, subBits),
-					]),
+					el('div', { className: 'qswitch-user__meta' }, metaChildren),
 				]
 			),
 			el('div', { className: 'qswitch-user__actions' }, actionChildren),
@@ -330,16 +346,11 @@
 		if (!panel || !item) {
 			return;
 		}
+		cancelClose();
 		state.open = true;
 		panel.classList.add('is-open');
 		item.classList.add('hover');
 		fetchUsers(true);
-		var input = panel.querySelector('.qswitch-panel__search input');
-		if (input && state.tab === 'all') {
-			setTimeout(function () {
-				input.focus();
-			}, 0);
-		}
 	}
 
 	function closePanel() {
@@ -355,16 +366,16 @@
 		}
 	}
 
-	function togglePanel(e) {
-		if (e) {
-			e.preventDefault();
-			e.stopPropagation();
-		}
-		if (state.open) {
+	function cancelClose() {
+		clearTimeout(closeTimer);
+		closeTimer = null;
+	}
+
+	function scheduleClose() {
+		cancelClose();
+		closeTimer = setTimeout(function () {
 			closePanel();
-		} else {
-			openPanel();
-		}
+		}, 200);
 	}
 
 	function buildPanel() {
@@ -425,8 +436,26 @@
 		var link = item.querySelector('.ab-item');
 		if (link) {
 			link.setAttribute('href', '#');
-			link.addEventListener('click', togglePanel);
+			link.addEventListener('click', function (e) {
+				e.preventDefault();
+			});
 		}
+
+		item.addEventListener('mouseenter', function () {
+			openPanel();
+		});
+
+		item.addEventListener('mouseleave', function () {
+			scheduleClose();
+		});
+
+		panel.addEventListener('mouseenter', function () {
+			cancelClose();
+		});
+
+		panel.addEventListener('mouseleave', function () {
+			scheduleClose();
+		});
 
 		var list = panel.querySelector('#qswitch-panel-list');
 		list.addEventListener('scroll', function () {
@@ -439,23 +468,10 @@
 			}
 		});
 
-		document.addEventListener('click', function (e) {
-			if (!state.open) {
-				return;
-			}
-			if (!item.contains(e.target)) {
-				closePanel();
-			}
-		});
-
 		document.addEventListener('keydown', function (e) {
 			if (e.key === 'Escape' && state.open) {
 				closePanel();
 			}
-		});
-
-		item.addEventListener('mouseenter', function (e) {
-			e.stopPropagation();
 		});
 	}
 

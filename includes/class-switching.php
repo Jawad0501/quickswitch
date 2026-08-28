@@ -21,6 +21,9 @@ final class QSwitch_Switching {
 		add_action( 'clear_auth_cookie', array( __CLASS__, 'on_clear_auth_cookie' ) );
 		add_filter( 'removable_query_args', array( __CLASS__, 'filter_removable_query_args' ) );
 		add_action( 'all_admin_notices', array( __CLASS__, 'render_admin_notices' ), 1 );
+		add_filter( 'login_message', array( __CLASS__, 'filter_login_message' ), 1 );
+		add_action( 'wp_meta', array( __CLASS__, 'action_wp_meta' ) );
+		add_action( 'wp_footer', array( __CLASS__, 'action_wp_footer' ) );
 	}
 
 	public static function define_cookies(): void {
@@ -43,6 +46,14 @@ final class QSwitch_Switching {
 
 	public static function can_manage(): bool {
 		return current_user_can( 'edit_users' );
+	}
+
+	public static function can_switch_off(): bool {
+		if ( ! is_user_logged_in() ) {
+			return false;
+		}
+
+		return self::get_old_user() instanceof WP_User || self::can_manage();
 	}
 
 	public static function can_switch_to( int $user_id ): bool {
@@ -356,22 +367,106 @@ final class QSwitch_Switching {
 		);
 	}
 
+	public static function switch_back_link_url( WP_User $old_user ): string {
+		return add_query_arg(
+			array(
+				'redirect_to' => rawurlencode( self::current_url() ),
+			),
+			self::switch_back_url( $old_user )
+		);
+	}
+
+	public static function switch_off_link_url(): string {
+		return add_query_arg(
+			array(
+				'redirect_to' => rawurlencode( self::current_url() ),
+			),
+			self::switch_off_url()
+		);
+	}
+
+	public static function filter_login_message( string $message ): string {
+		$old_user = self::get_old_user();
+
+		if ( ! ( $old_user instanceof WP_User ) ) {
+			return $message;
+		}
+
+		$url = self::switch_back_url( $old_user );
+
+		if ( ! empty( $_REQUEST['redirect_to'] ) ) {
+			$url = add_query_arg(
+				array(
+					'redirect_to' => rawurlencode( wp_unslash( (string) $_REQUEST['redirect_to'] ) ),
+				),
+				$url
+			);
+		}
+
+		$message .= '<p class="message" id="qswitch-switch-on">';
+		$message .= '<span class="dashicons dashicons-admin-users" style="color:#56c234" aria-hidden="true"></span> ';
+		$message .= sprintf(
+			'<a href="%1$s">%2$s</a>',
+			esc_url( $url ),
+			esc_html( self::switch_back_message( $old_user ) )
+		);
+		$message .= '</p>';
+
+		return $message;
+	}
+
+	public static function action_wp_meta(): void {
+		$old_user = self::get_old_user();
+
+		if ( ! ( $old_user instanceof WP_User ) ) {
+			return;
+		}
+
+		printf(
+			'<li id="qswitch-switch-on"><a href="%s">%s</a></li>',
+			esc_url( self::switch_back_link_url( $old_user ) ),
+			esc_html( self::switch_back_message( $old_user ) )
+		);
+	}
+
+	public static function action_wp_footer(): void {
+		if ( is_admin_bar_showing() || did_action( 'wp_meta' ) ) {
+			return;
+		}
+
+		/**
+		 * Filters whether to show the switch-back link in the site footer.
+		 *
+		 * @param bool $show Whether to show the link.
+		 */
+		if ( ! apply_filters( 'quickswitch_show_footer_switch_back', true ) ) {
+			return;
+		}
+
+		$old_user = self::get_old_user();
+
+		if ( ! ( $old_user instanceof WP_User ) ) {
+			return;
+		}
+
+		printf(
+			'<p id="qswitch-switch-on" style="%s"><a href="%s" style="%s">%s</a></p>',
+			'position: fixed; bottom: 40px; padding: 0; margin: 0; left: 10px; font-size: 13px; z-index: 99999;',
+			esc_url( self::switch_back_link_url( $old_user ) ),
+			'padding: 9px 12px; background: #3858e9; color: #fff; text-decoration: none; border-radius: 2px;',
+			esc_html( self::switch_back_message( $old_user ) )
+		);
+	}
+
 	public static function render_admin_notices(): void {
 		$user     = wp_get_current_user();
 		$old_user = self::get_old_user();
 
 		if ( $old_user instanceof WP_User ) {
-			$switch_back_url = add_query_arg(
-				array(
-					'redirect_to' => rawurlencode( self::current_url() ),
-				),
-				self::switch_back_url( $old_user )
-			);
-
 			$message = isset( $_GET['qswitch_switched'] ) ? self::switched_to_message( $user ) . ' ' : '';
 			$message .= sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( $switch_back_url ),
+				esc_url( self::switch_back_link_url( $old_user ) ),
 				esc_html( self::switch_back_message( $old_user ) )
 			);
 

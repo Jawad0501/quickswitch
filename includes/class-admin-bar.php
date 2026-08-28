@@ -71,6 +71,8 @@ final class QSwitch_Admin_Bar {
 			self::register_switched_nodes( $admin_bar, $old_user );
 		}
 
+		self::register_profile_menu_nodes( $admin_bar, $old_user );
+
 		if ( is_admin() && QSwitch_Switching::can_manage() ) {
 			$admin_bar->add_node(
 				array(
@@ -103,36 +105,45 @@ final class QSwitch_Admin_Bar {
 			)
 		);
 
-		$switch_back_url = add_query_arg(
-			array(
-				'redirect_to' => rawurlencode( QSwitch_Switching::current_url() ),
-			),
-			QSwitch_Switching::switch_back_url( $old_user )
-		);
-
 		$admin_bar->add_node(
 			array(
 				'parent' => 'qswitch-switched',
 				'id'     => 'qswitch-switch-back',
 				'title'  => QSwitch_Switching::switch_back_message( $old_user ),
-				'href'   => $switch_back_url,
+				'href'   => QSwitch_Switching::switch_back_link_url( $old_user ),
 			)
 		);
 
-		if ( QSwitch_Switching::can_manage() ) {
-			$admin_bar->add_node(
-				array(
-					'parent' => 'qswitch-switched',
-					'id'     => 'qswitch-switch-off',
-					'title'  => __( 'Switch Off', 'quickswitch' ),
-					'href'   => add_query_arg(
-						array(
-							'redirect_to' => rawurlencode( QSwitch_Switching::current_url() ),
-						),
-						QSwitch_Switching::switch_off_url()
-					),
-				)
-			);
+		$admin_bar->add_node(
+			array(
+				'parent' => 'qswitch-switched',
+				'id'     => 'qswitch-switch-off',
+				'title'  => __( 'Switch Off', 'quickswitch' ),
+				'href'   => QSwitch_Switching::switch_off_link_url(),
+			)
+		);
+	}
+
+	/**
+	 * @param false|WP_User $old_user
+	 */
+	private static function register_profile_menu_nodes( WP_Admin_Bar $admin_bar, false|WP_User $old_user ): void {
+		if ( ! $admin_bar->get_node( 'user-actions' ) ) {
+			return;
 		}
+
+		// When switched, Switch Back / Switch Off live under "Switched to …" in the admin bar.
+		if ( $old_user instanceof WP_User || ! QSwitch_Switching::can_manage() ) {
+			return;
+		}
+
+		$admin_bar->add_node(
+			array(
+				'parent' => 'user-actions',
+				'id'     => 'qswitch-profile-switch-off',
+				'title'  => __( 'Switch Off', 'quickswitch' ),
+				'href'   => QSwitch_Switching::switch_off_link_url(),
+			)
+		);
 	}
 }

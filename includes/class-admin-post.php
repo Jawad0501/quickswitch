@@ -23,6 +23,8 @@ final class QSwitch_Admin_Post {
 		foreach ( $actions as $action ) {
 			add_action( 'admin_post_' . $action, array( __CLASS__, 'handle_' . str_replace( 'qswitch_', '', $action ) ) );
 		}
+
+		add_action( 'admin_post_nopriv_qswitch_switch_back', array( __CLASS__, 'handle_switch_back' ) );
 	}
 
 	public static function handle_pin(): void {
@@ -127,7 +129,9 @@ final class QSwitch_Admin_Post {
 	}
 
 	public static function handle_switch_off(): void {
-		self::require_manage();
+		if ( ! QSwitch_Switching::can_switch_off() ) {
+			wp_die( esc_html__( 'Could not switch off.', 'quickswitch' ), 403 );
+		}
 
 		check_admin_referer( 'qswitch_switch_off' );
 
@@ -135,12 +139,18 @@ final class QSwitch_Admin_Post {
 			wp_die( esc_html__( 'Could not switch off.', 'quickswitch' ), 403 );
 		}
 
+		$redirect_to = home_url();
+
+		if ( ! empty( $_REQUEST['redirect_to'] ) ) {
+			$redirect_to = wp_validate_redirect( wp_unslash( (string) $_REQUEST['redirect_to'] ), $redirect_to );
+		}
+
 		wp_safe_redirect(
 			add_query_arg(
 				array(
 					'qswitch_switched_off' => '1',
 				),
-				home_url()
+				$redirect_to
 			),
 			302,
 			QSwitch_Switching::APPLICATION

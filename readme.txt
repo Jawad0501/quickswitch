@@ -4,7 +4,7 @@ Tags: user switching, development, testing, roles, capabilities
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.1.0
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,14 @@ Multisite is not a priority for v1. It may work incidentally but is not tested o
 
 == Changelog ==
 
+= 1.1.2 =
+* Add Switch Off to the admin bar profile menu when logged in as admin (not while switched)
+
+= 1.1.1 =
+* Show Switch Off for any switched user, not only accounts with edit_users
+* Add switch-back links on the login screen, site footer, and Meta widget after Switch Off
+* Allow switch back while logged out via admin-post nopriv handler
+
 = 1.1.0 =
 * Remove Users → QuickSwitch settings page; pin and unpin from the Users list or admin bar panel
 * Show pin/unpin success notices globally in wp-admin
@@ -113,6 +121,12 @@ Multisite is not a priority for v1. It may work incidentally but is not tested o
 * Initial release: standalone switching, pinning, admin bar menu, settings page, Users list row actions
 
 == Upgrade Notice ==
+
+= 1.1.2 =
+Switch Off is now available in the profile menu on the top-right admin bar.
+
+= 1.1.1 =
+Switch Off and switch-back links now work when testing as non-admin roles on the frontend.
 
 = 1.1.0 =
 The settings page is removed. Pin and unpin users from the Users list or the admin bar All users tab.
