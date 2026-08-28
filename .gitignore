@@ -1,0 +1,5 @@
+# Release builds
+*.zip
+
+# macOS
+.DS_Store
