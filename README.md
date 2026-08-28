@@ -4,6 +4,13 @@ Pin test users and switch between WordPress accounts in one click while developi
 
 **Download:** [Latest release](https://github.com/jawad0501/quickswitch/releases/latest)
 
+## Demo
+
+<p align="center">
+  <img src="assets/screenshots/quickswitch-demo.gif" alt="QuickSwitch admin bar — pin users and switch accounts" width="720">
+</p>
+<p align="center"><em>Hover Switch User → browse pinned users → switch in one click</em></p>
+
 ## Why QuickSwitch?
 
 When you build WordPress plugins, you often jump between an admin account and a handful of fixed test users — Editor, Subscriber, Customer, custom roles. Existing user switching plugins work, but you still hunt through the Users list every session.
