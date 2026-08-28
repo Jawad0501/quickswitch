@@ -1,0 +1,154 @@
+.qswitch-settings {
+	max-width: 820px;
+}
+
+.qswitch-settings__intro {
+	margin: 8px 0 20px;
+	color: #50575e;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.qswitch-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 48px 24px;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	background: #fff;
+	text-align: center;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.qswitch-empty__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	margin-bottom: 8px;
+	border-radius: 50%;
+	background: #f0f6fc;
+	color: #2271b1;
+}
+
+.qswitch-empty__icon .dashicons {
+	font-size: 28px;
+	width: 28px;
+	height: 28px;
+}
+
+.qswitch-empty__title {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.qswitch-empty__text {
+	margin: 0 0 12px;
+	max-width: 420px;
+	color: #646970;
+	font-size: 14px;
+	line-height: 1.55;
+}
+
+.qswitch-empty__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	justify-content: center;
+}
+
+.qswitch-table-wrap {
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	background: #fff;
+	overflow: hidden;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.qswitch-table {
+	margin: 0;
+	border: 0;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.qswitch-table th,
+.qswitch-table td {
+	padding: 14px 16px;
+	vertical-align: middle;
+}
+
+.qswitch-table thead th {
+	background: #f6f7f7;
+	border-bottom: 1px solid #dcdcde;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+	color: #50575e;
+}
+
+.qswitch-user-cell {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.qswitch-user-cell__avatar {
+	flex: 0 0 40px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	overflow: hidden;
+	background: #f0f0f1;
+}
+
+.qswitch-user-cell__avatar img {
+	display: block;
+	width: 40px;
+	height: 40px;
+}
+
+.qswitch-user-cell__name {
+	display: block;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.qswitch-user-cell__login {
+	display: block;
+	margin-top: 2px;
+	color: #646970;
+	font-size: 12px;
+}
+
+.qswitch-role {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: #f0f0f1;
+	color: #50575e;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.qswitch-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+}
+
+.qswitch-actions a {
+	text-decoration: none;
+}
+
+.qswitch-actions .button-link-delete {
+	color: #b32d2e;
+}
