@@ -4,7 +4,7 @@ Tags: user switching, development, testing, roles, capabilities
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.0.6
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,9 +26,8 @@ When you are building a plugin, you often need to jump between an admin account 
 
 = Pinning =
 
-* Pin or unpin users from the **Users** list row actions
+* Pin or unpin users from the **Users** list row actions or the admin bar **All users** tab
 * Pins are stored per admin in usermeta (no custom database tables)
-* Manage pinned users from **Users → QuickSwitch**
 
 = Admin bar panel =
 
@@ -82,10 +81,13 @@ Multisite is not a priority for v1. It may work incidentally but is not tested o
 == Screenshots ==
 
 1. Admin bar Switch User panel with Pinned and All users tabs
-2. Users → QuickSwitch settings page
-3. Switch To button on user edit screen
+2. Switch To button on user edit screen
 
 == Changelog ==
+
+= 1.1.0 =
+* Remove Users → QuickSwitch settings page; pin and unpin from the Users list or admin bar panel
+* Show pin/unpin success notices globally in wp-admin
 
 = 1.0.6 =
 * Place Switch To header button to the right of Add User on user edit screens
@@ -111,6 +113,9 @@ Multisite is not a priority for v1. It may work incidentally but is not tested o
 * Initial release: standalone switching, pinning, admin bar menu, settings page, Users list row actions
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+The settings page is removed. Pin and unpin users from the Users list or the admin bar All users tab.
 
 = 1.0.6 =
 Switch To button on user edit screens now appears next to Add User.

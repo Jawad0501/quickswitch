@@ -117,30 +117,67 @@
 		}
 		nameChildren.push(document.createTextNode(user.display_name || user.user_login));
 
-		return el(
-			'a',
-			{
-				className: 'qswitch-user',
+		var showPin = state.tab === 'all' && !user.pinned && user.pin_url;
+		var showUnpin = state.tab === 'pinned' && user.pinned && user.unpin_url;
+		var actionChildren = [];
+
+		if (showPin) {
+			actionChildren.push(
+				el('a', {
+					className: 'qswitch-user__pin-link',
+					href: user.pin_url,
+					title: cfg.i18n.pinUser || 'Pin user',
+					text: cfg.i18n.pin || 'Pin',
+				})
+			);
+		}
+
+		if (showUnpin) {
+			actionChildren.push(
+				el('a', {
+					className: 'qswitch-user__unpin-link',
+					href: user.unpin_url,
+					title: cfg.i18n.unpinUser || 'Unpin user',
+					text: cfg.i18n.unpin || 'Unpin',
+				})
+			);
+		}
+
+		actionChildren.push(
+			el('a', {
+				className: 'qswitch-user__switch-link',
 				href: switchUrl,
 				title: (cfg.i18n.switchTo || 'Switch to') + ' ' + (user.display_name || user.user_login),
-			},
-			[
-				el('div', { className: 'qswitch-user__avatar' }, [
-					el('img', {
-						src: user.avatar || '',
-						alt: '',
-						width: '32',
-						height: '32',
-						loading: 'lazy',
-					}),
-				]),
-				el('div', { className: 'qswitch-user__meta' }, [
-					el('span', { className: 'qswitch-user__name' }, nameChildren),
-					el('div', { className: 'qswitch-user__sub' }, subBits),
-				]),
-				el('span', { className: 'qswitch-user__action', text: cfg.i18n.switchTo || 'Switch To' }),
-			]
+				text: cfg.i18n.switchTo || 'Switch To',
+			})
 		);
+
+		return el('div', { className: 'qswitch-user-row' }, [
+			el(
+				'a',
+				{
+					className: 'qswitch-user__main',
+					href: switchUrl,
+					title: (cfg.i18n.switchTo || 'Switch to') + ' ' + (user.display_name || user.user_login),
+				},
+				[
+					el('div', { className: 'qswitch-user__avatar' }, [
+						el('img', {
+							src: user.avatar || '',
+							alt: '',
+							width: '32',
+							height: '32',
+							loading: 'lazy',
+						}),
+					]),
+					el('div', { className: 'qswitch-user__meta' }, [
+						el('span', { className: 'qswitch-user__name' }, nameChildren),
+						el('div', { className: 'qswitch-user__sub' }, subBits),
+					]),
+				]
+			),
+			el('div', { className: 'qswitch-user__actions' }, actionChildren),
+		]);
 	}
 
 	function renderEmpty() {
@@ -179,7 +216,7 @@
 			list.appendChild(renderUser(user));
 		});
 
-		if (!state.hasMore && list.querySelector('.qswitch-user, .qswitch-panel__empty')) {
+		if (!state.hasMore && list.querySelector('.qswitch-user-row, .qswitch-panel__empty')) {
 			list.appendChild(
 				el('div', { className: 'qswitch-panel__end', text: cfg.i18n.end || 'End of list' })
 			);

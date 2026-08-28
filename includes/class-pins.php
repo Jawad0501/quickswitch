@@ -13,6 +13,7 @@ final class QSwitch_Pins {
 
 	public static function boot(): void {
 		add_action( 'delete_user', array( __CLASS__, 'remove_user_from_all_pins' ) );
+		add_action( 'admin_notices', array( __CLASS__, 'render_admin_notices' ) );
 	}
 
 	/**
@@ -135,6 +136,20 @@ final class QSwitch_Pins {
 				'qswitch_unpin_' . $user_id
 			)
 		);
+	}
+
+	public static function render_admin_notices(): void {
+		if ( ! QSwitch_Switching::can_manage() ) {
+			return;
+		}
+
+		if ( isset( $_GET['qswitch_pinned'] ) ) {
+			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'User pinned.', 'quickswitch' ) . '</p></div>';
+		}
+
+		if ( isset( $_GET['qswitch_unpinned'] ) ) {
+			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'User unpinned.', 'quickswitch' ) . '</p></div>';
+		}
 	}
 
 	public static function remove_user_from_all_pins( int $user_id ): void {

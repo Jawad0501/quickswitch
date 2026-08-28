@@ -31,7 +31,6 @@ final class QSwitch_Plugin {
 		QSwitch_Admin_Bar::boot();
 		QSwitch_Users_Table::boot();
 		QSwitch_User_Profile::boot();
-		QSwitch_Settings_Page::boot();
 	}
 
 	public function load_textdomain(): void {
