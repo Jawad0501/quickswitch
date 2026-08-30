@@ -13,7 +13,7 @@ final class PinSwitch_User_Profile {
 
 	public static function boot(): void {
 		add_action( 'personal_options', array( __CLASS__, 'render_personal_options' ), 99 );
-		add_action( 'admin_footer-user-edit.php', array( __CLASS__, 'render_edit_header_button' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_edit_screen_assets' ) );
 	}
 
 	public static function render_personal_options( WP_User $user ): void {
@@ -34,7 +34,11 @@ final class PinSwitch_User_Profile {
 		<?php
 	}
 
-	public static function render_edit_header_button(): void {
+	public static function enqueue_edit_screen_assets( string $hook_suffix ): void {
+		if ( 'user-edit.php' !== $hook_suffix ) {
+			return;
+		}
+
 		$user_id = absint( $_GET['user_id'] ?? 0 );
 
 		if ( ! $user_id || ! PinSwitch_Switching::can_switch_to( $user_id ) ) {
@@ -47,36 +51,22 @@ final class PinSwitch_User_Profile {
 			return;
 		}
 
-		$url   = self::switch_url_for_user( $user );
-		$label = __( 'Switch To', 'pinswitch-user-switcher' );
-		?>
-		<script>
-		(function () {
-			if (document.getElementById('pinswitch-switch-to-user')) {
-				return;
-			}
+		wp_enqueue_script(
+			'pinswitch-user-edit',
+			plugins_url( 'assets/user-edit.js', PINSWITCH_FILE ),
+			array(),
+			PINSWITCH_VERSION,
+			true
+		);
 
-			var wrap = document.getElementById('profile-page');
-			if (!wrap) {
-				return;
-			}
-
-			var addUser = wrap.querySelector('a.page-title-action[href*="user-new.php"]');
-			var anchor = addUser || wrap.querySelector('h1.wp-heading-inline');
-
-			if (!anchor) {
-				return;
-			}
-
-			var link = document.createElement('a');
-			link.id = 'pinswitch-switch-to-user';
-			link.className = 'page-title-action';
-			link.href = <?php echo wp_json_encode( $url ); ?>;
-			link.textContent = <?php echo wp_json_encode( $label ); ?>;
-			anchor.insertAdjacentElement('afterend', link);
-		})();
-		</script>
-		<?php
+		wp_localize_script(
+			'pinswitch-user-edit',
+			'pinswitchUserEdit',
+			array(
+				'url'   => self::switch_url_for_user( $user ),
+				'label' => __( 'Switch To', 'pinswitch-user-switcher' ),
+			)
+		);
 	}
 
 	private static function switch_url_for_user( WP_User $user ): string {

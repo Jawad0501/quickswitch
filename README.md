@@ -83,6 +83,10 @@ No audit log, multisite-specific code, CLI, REST API layer, or dependency on oth
 
 ## Changelog
 
+### 1.2.1
+
+- Enqueue user-edit Switch To script via `wp_enqueue_script` instead of an inline `<script>` tag
+
 ### 1.2.0
 
 - Rename plugin to PinSwitch User Switcher (slug: `pinswitch-user-switcher`)

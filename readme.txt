@@ -4,7 +4,7 @@ Tags: user switching, development, testing, roles, capabilities
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,9 @@ Multisite is not a priority for v1. It may work incidentally but is not tested o
 
 == Changelog ==
 
+= 1.2.1 =
+* Enqueue user-edit Switch To script via wp_enqueue_script instead of an inline script tag
+
 = 1.2.0 =
 * Rename plugin to PinSwitch User Switcher (slug: pinswitch-user-switcher)
 * Migrate pinned users from the former QuickSwitch usermeta key
@@ -137,6 +140,9 @@ Multisite is not a priority for v1. It may work incidentally but is not tested o
 * Initial release: standalone switching, pinning, admin bar menu, settings page, Users list row actions
 
 == Upgrade Notice ==
+
+= 1.2.1 =
+Uses WordPress script enqueue APIs for the user edit Switch To button.
 
 = 1.2.0 =
 Renamed to PinSwitch User Switcher. Re-activate after updating the plugin folder/slug.

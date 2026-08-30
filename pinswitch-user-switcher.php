@@ -3,7 +3,7 @@
  * Plugin Name:       PinSwitch User Switcher
  * Plugin URI:        https://github.com/Jawad0501/pinswitch-user-switcher
  * Description:       Pin test users and switch between accounts in one click while developing WordPress plugins.
- * Version:           1.2.0
+ * Version:           1.2.1
  * Author:            jawad0501
  * Author URI:        https://profiles.wordpress.org/jawad0501/
  * License:           GPL v2 or later
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'PINSWITCH_VERSION', '1.2.0' );
+define( 'PINSWITCH_VERSION', '1.2.1' );
 define( 'PINSWITCH_FILE', __FILE__ );
 define( 'PINSWITCH_PATH', plugin_dir_path( __FILE__ ) );
 define( 'PINSWITCH_META_KEY', 'pinswitch_pinned_users' );
