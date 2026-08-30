@@ -1,21 +1,21 @@
-# QuickSwitch
+# PinSwitch User Switcher
 
 Pin test users and switch between WordPress accounts in one click while developing plugins.
 
-**Download:** [Latest release](https://github.com/jawad0501/quickswitch/releases/latest)
+**Download:** [Latest release](https://github.com/Jawad0501/pinswitch-user-switcher/releases/latest)
 
 ## Demo
 
 <p align="center">
-  <img src="assets/screenshots/quickswitch-demo.gif" alt="QuickSwitch admin bar — pin users and switch accounts" width="720">
+  <img src="assets/screenshots/pinswitch-demo.gif" alt="PinSwitch User Switcher admin bar — pin users and switch accounts" width="720">
 </p>
 <p align="center"><em>Hover Switch User → browse pinned users → switch in one click</em></p>
 
-## Why QuickSwitch?
+## Why PinSwitch User Switcher?
 
 When you build WordPress plugins, you often jump between an admin account and a handful of fixed test users — Editor, Subscriber, Customer, custom roles. Existing user switching plugins work, but you still hunt through the Users list every session.
 
-QuickSwitch adds a pinning layer on top of a complete, standalone switching implementation built for developer workflows.
+PinSwitch User Switcher adds a pinning layer on top of a complete, standalone switching implementation built for developer workflows.
 
 ## Features
 
@@ -54,13 +54,13 @@ QuickSwitch adds a pinning layer on top of a complete, standalone switching impl
 
 ## Installation
 
-1. Download the latest release zip from [GitHub Releases](https://github.com/jawad0501/quickswitch/releases).
+1. Download the latest release zip from [GitHub Releases](https://github.com/Jawad0501/pinswitch-user-switcher/releases).
 2. In WordPress, go to **Plugins → Add New → Upload Plugin** and install the zip.
-3. Activate QuickSwitch.
+3. Activate PinSwitch User Switcher.
 4. Go to **Users**, pin your test accounts using the **Pin** row action.
 5. During testing, open **Switch User** from the admin bar and click a pinned account.
 
-Alternatively, clone this repo into `wp-content/plugins/quickswitch` and activate it.
+Alternatively, clone this repo into `wp-content/plugins/pinswitch-user-switcher` and activate it.
 
 ## Permissions
 
@@ -69,19 +69,24 @@ Users with the `edit_users` capability can pin users and switch accounts. Switch
 ## FAQ
 
 **Does this replace User Switching?**  
-Yes. QuickSwitch is standalone and implements its own switch-to, switch-back, and switch-off flow.
+Yes. PinSwitch User Switcher is standalone and implements its own switch-to, switch-back, and switch-off flow.
 
 **Are pins shared between admins?**  
 No. Pins are stored against your own user account.
 
-**Does QuickSwitch work on Multisite?**  
+**Does PinSwitch User Switcher work on Multisite?**  
 Multisite is not a priority for v1. It may work incidentally but is not tested or supported.
 
-## What QuickSwitch intentionally leaves out
+## What PinSwitch User Switcher intentionally leaves out
 
 No audit log, multisite-specific code, CLI, REST API layer, or dependency on other switching plugins. It is a small developer tool, not a platform plugin.
 
 ## Changelog
+
+### 1.2.0
+
+- Rename plugin to PinSwitch User Switcher (slug: `pinswitch-user-switcher`)
+- Migrate pinned users from the former QuickSwitch usermeta key
 
 ### 1.1.5
 
@@ -109,7 +114,7 @@ No audit log, multisite-specific code, CLI, REST API layer, or dependency on oth
 
 ### 1.1.0
 
-- Remove Users → QuickSwitch settings page; pin and unpin from the Users list or admin bar panel
+- Remove Users → PinSwitch User Switcher settings page; pin and unpin from the Users list or admin bar panel
 - Show pin/unpin success notices globally in wp-admin
 
 See [readme.txt](readme.txt) for the full changelog.
@@ -122,4 +127,4 @@ GPL v2 or later. See [LICENSE](https://www.gnu.org/licenses/gpl-2.0.html).
 
 Inspired by the user-switching pattern established in the WordPress ecosystem, particularly the work of [John Blackbourn](https://profiles.wordpress.org/johnbillion/) on [User Switching](https://wordpress.org/plugins/user-switching/).
 
-If your use case is general-purpose user switching — multisite, WooCommerce, enterprise compatibility — use the original. If you are a plugin developer switching between the same test users all day, QuickSwitch is built for that workflow.
+If your use case is general-purpose user switching — multisite, WooCommerce, enterprise compatibility — use the original. If you are a plugin developer switching between the same test users all day, PinSwitch User Switcher is built for that workflow.

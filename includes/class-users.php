@@ -1,15 +1,15 @@
 <?php
 /**
- * User listing helpers for QuickSwitch UI.
+ * User listing helpers for PinSwitch User Switcher UI.
  *
- * @package QuickSwitch
+ * @package PinSwitch_User_Switcher
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class QSwitch_Users {
+final class PinSwitch_Users {
 
 	public const PAGE_SIZE = 20;
 
@@ -22,10 +22,10 @@ final class QSwitch_Users {
 		$role_names = wp_roles()->get_names();
 		$role_label = $role_slug && isset( $role_names[ $role_slug ] )
 			? translate_user_role( $role_names[ $role_slug ] )
-			: __( 'No role', 'quickswitch' );
+			: __( 'No role', 'pinswitch-user-switcher' );
 
 		$user_id = (int) $user->ID;
-		$pinned  = QSwitch_Pins::is_pinned( $user_id );
+		$pinned  = PinSwitch_Pins::is_pinned( $user_id );
 
 		return array(
 			'id'           => $user_id,
@@ -36,9 +36,9 @@ final class QSwitch_Users {
 			'avatar'       => get_avatar_url( $user_id, array( 'size' => 64 ) ),
 			'pinned'       => $pinned,
 			'profile_url'  => get_edit_user_link( $user_id, 'raw' ),
-			'switch_url'   => QSwitch_Switching::switch_to_url( $user_id ),
-			'pin_url'      => $pinned ? '' : QSwitch_Pins::pin_url( $user_id ),
-			'unpin_url'    => $pinned ? QSwitch_Pins::unpin_url( $user_id ) : '',
+			'switch_url'   => PinSwitch_Switching::switch_to_url( $user_id ),
+			'pin_url'      => $pinned ? '' : PinSwitch_Pins::pin_url( $user_id ),
+			'unpin_url'    => $pinned ? PinSwitch_Pins::unpin_url( $user_id ) : '',
 		);
 	}
 
@@ -52,7 +52,7 @@ final class QSwitch_Users {
 
 		if ( $pinned_only ) {
 			$pinned_ids = array_values(
-				array_diff( QSwitch_Pins::get_pinned_ids(), $exclude )
+				array_diff( PinSwitch_Pins::get_pinned_ids(), $exclude )
 			);
 
 			if ( empty( $pinned_ids ) ) {
@@ -115,7 +115,7 @@ final class QSwitch_Users {
 
 		$formatted = array();
 		foreach ( $users as $user ) {
-			if ( ! QSwitch_Switching::can_switch_to( (int) $user->ID ) ) {
+			if ( ! PinSwitch_Switching::can_switch_to( (int) $user->ID ) ) {
 				continue;
 			}
 			$formatted[] = self::format_user( $user );

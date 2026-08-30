@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	var cfg = window.qswitchPanel || {};
+	var cfg = window.pinswitchPanel || {};
 	var state = {
 		tab: 'pinned',
 		search: '',
@@ -53,15 +53,15 @@
 	}
 
 	function panelRoot() {
-		return document.getElementById('qswitch-panel');
+		return document.getElementById('pinswitch-panel');
 	}
 
 	function listRoot() {
-		return document.getElementById('qswitch-panel-list');
+		return document.getElementById('pinswitch-panel-list');
 	}
 
 	function loadingNode() {
-		return el('div', { className: 'qswitch-panel__loading', text: cfg.i18n.loading || 'Loading…' });
+		return el('div', { className: 'pinswitch-panel__loading', text: cfg.i18n.loading || 'Loading…' });
 	}
 
 	function replaceListWithLoading() {
@@ -80,7 +80,7 @@
 		if (!list) {
 			return;
 		}
-		var loading = list.querySelector('.qswitch-panel__loading');
+		var loading = list.querySelector('.pinswitch-panel__loading');
 		if (loading) {
 			loading.remove();
 		}
@@ -89,7 +89,7 @@
 
 	function appendLoadingIndicator() {
 		var list = listRoot();
-		if (!list || list.querySelector('.qswitch-panel__loading')) {
+		if (!list || list.querySelector('.pinswitch-panel__loading')) {
 			return;
 		}
 		list.appendChild(loadingNode());
@@ -109,30 +109,30 @@
 
 		var nameChildren = [];
 		if (user.pinned) {
-			nameChildren.push(el('span', { className: 'qswitch-user__pin', text: '★ ' }));
+			nameChildren.push(el('span', { className: 'pinswitch-user__pin', text: '★ ' }));
 		}
 		nameChildren.push(document.createTextNode(label));
 
 		var nameRowChildren = [
-			el('span', { className: 'qswitch-user__name', title: label }, nameChildren),
+			el('span', { className: 'pinswitch-user__name', title: label }, nameChildren),
 		];
 		if (user.role) {
-			nameRowChildren.push(el('span', { className: 'qswitch-user__role', text: user.role }));
+			nameRowChildren.push(el('span', { className: 'pinswitch-user__role', text: user.role }));
 		}
 
 		var metaChildren = [
-			el('div', { className: 'qswitch-user__name-row' }, nameRowChildren),
+			el('div', { className: 'pinswitch-user__name-row' }, nameRowChildren),
 		];
 
 		if (user.user_login) {
 			metaChildren.push(
-				el('div', { className: 'qswitch-user__login', text: '@' + user.user_login })
+				el('div', { className: 'pinswitch-user__login', text: '@' + user.user_login })
 			);
 		}
 
 		if (user.user_email) {
 			metaChildren.push(
-				el('div', { className: 'qswitch-user__email', text: user.user_email, title: user.user_email })
+				el('div', { className: 'pinswitch-user__email', text: user.user_email, title: user.user_email })
 			);
 		}
 
@@ -143,7 +143,7 @@
 		if (showPin) {
 			actionChildren.push(
 				el('a', {
-					className: 'qswitch-user__pin-link',
+					className: 'pinswitch-user__pin-link',
 					href: user.pin_url,
 					title: cfg.i18n.pinUser || 'Pin user',
 					text: cfg.i18n.pin || 'Pin',
@@ -154,7 +154,7 @@
 		if (showUnpin) {
 			actionChildren.push(
 				el('a', {
-					className: 'qswitch-user__unpin-link',
+					className: 'pinswitch-user__unpin-link',
 					href: user.unpin_url,
 					title: cfg.i18n.unpinUser || 'Unpin user',
 					text: cfg.i18n.unpin || 'Unpin',
@@ -164,23 +164,23 @@
 
 		actionChildren.push(
 			el('a', {
-				className: 'qswitch-user__switch-link',
+				className: 'pinswitch-user__switch-link',
 				href: switchUrl,
 				title: (cfg.i18n.switchTo || 'Switch to') + ' ' + label,
 				text: cfg.i18n.switchTo || 'Switch To',
 			})
 		);
 
-		return el('div', { className: 'qswitch-user-row' }, [
+		return el('div', { className: 'pinswitch-user-row' }, [
 			el(
 				'a',
 				{
-					className: 'qswitch-user__main',
+					className: 'pinswitch-user__main',
 					href: profileUrl,
 					title: label,
 				},
 				[
-					el('div', { className: 'qswitch-user__avatar' }, [
+					el('div', { className: 'pinswitch-user__avatar' }, [
 						el('img', {
 							src: user.avatar || '',
 							alt: '',
@@ -189,10 +189,10 @@
 							loading: 'lazy',
 						}),
 					]),
-					el('div', { className: 'qswitch-user__meta' }, metaChildren),
+					el('div', { className: 'pinswitch-user__meta' }, metaChildren),
 				]
 			),
-			el('div', { className: 'qswitch-user__actions' }, actionChildren),
+			el('div', { className: 'pinswitch-user__actions' }, actionChildren),
 		]);
 	}
 
@@ -201,7 +201,7 @@
 			state.tab === 'pinned'
 				? cfg.i18n.emptyPinned || 'No pinned users yet.'
 				: cfg.i18n.emptySearch || 'No users found.';
-		return el('div', { className: 'qswitch-panel__empty', text: msg });
+		return el('div', { className: 'pinswitch-panel__empty', text: msg });
 	}
 
 	function renderUsers(users, reset) {
@@ -217,7 +217,7 @@
 			removeLoadingIndicator();
 		}
 
-		var end = list.querySelector('.qswitch-panel__end');
+		var end = list.querySelector('.pinswitch-panel__end');
 		if (end) {
 			end.remove();
 		}
@@ -232,9 +232,9 @@
 			list.appendChild(renderUser(user));
 		});
 
-		if (!state.hasMore && list.querySelector('.qswitch-user-row, .qswitch-panel__empty')) {
+		if (!state.hasMore && list.querySelector('.pinswitch-user-row, .pinswitch-panel__empty')) {
 			list.appendChild(
-				el('div', { className: 'qswitch-panel__end', text: cfg.i18n.end || 'End of list' })
+				el('div', { className: 'pinswitch-panel__end', text: cfg.i18n.end || 'End of list' })
 			);
 		}
 
@@ -247,7 +247,7 @@
 		if (reset) {
 			state.page = 1;
 			state.hasMore = false;
-			if (!listRoot() || !listRoot().querySelector('.qswitch-panel__loading')) {
+			if (!listRoot() || !listRoot().querySelector('.pinswitch-panel__loading')) {
 				replaceListWithLoading();
 			}
 		} else {
@@ -259,7 +259,7 @@
 		}
 
 		var body = new FormData();
-		body.append('action', 'qswitch_search_users');
+		body.append('action', 'pinswitch_search_users');
 		body.append('nonce', cfg.nonce || '');
 		body.append('search', state.search);
 		body.append('page', String(state.page));
@@ -316,12 +316,12 @@
 			return;
 		}
 
-		panel.querySelectorAll('.qswitch-panel__tab').forEach(function (btn) {
+		panel.querySelectorAll('.pinswitch-panel__tab').forEach(function (btn) {
 			btn.classList.toggle('is-active', btn.getAttribute('data-tab') === tab);
 		});
 
-		var searchWrap = panel.querySelector('.qswitch-panel__search');
-		var input = panel.querySelector('.qswitch-panel__search input');
+		var searchWrap = panel.querySelector('.pinswitch-panel__search');
+		var input = panel.querySelector('.pinswitch-panel__search input');
 
 		if (tab === 'all') {
 			if (searchWrap) {
@@ -342,7 +342,7 @@
 
 	function openPanel() {
 		var panel = panelRoot();
-		var item = document.getElementById('wp-admin-bar-qswitch-menu');
+		var item = document.getElementById('wp-admin-bar-pinswitch-menu');
 		if (!panel || !item) {
 			return;
 		}
@@ -355,7 +355,7 @@
 
 	function closePanel() {
 		var panel = panelRoot();
-		var item = document.getElementById('wp-admin-bar-qswitch-menu');
+		var item = document.getElementById('wp-admin-bar-pinswitch-menu');
 		if (!panel) {
 			return;
 		}
@@ -379,16 +379,16 @@
 	}
 
 	function buildPanel() {
-		var item = document.getElementById('wp-admin-bar-qswitch-menu');
-		if (!item || document.getElementById('qswitch-panel')) {
+		var item = document.getElementById('wp-admin-bar-pinswitch-menu');
+		if (!item || document.getElementById('pinswitch-panel')) {
 			return;
 		}
 
-		var panel = el('div', { id: 'qswitch-panel', className: 'qswitch-panel' }, [
-			el('div', { className: 'qswitch-panel__tabs' }, [
+		var panel = el('div', { id: 'pinswitch-panel', className: 'pinswitch-panel' }, [
+			el('div', { className: 'pinswitch-panel__tabs' }, [
 				el('button', {
 					type: 'button',
-					className: 'qswitch-panel__tab is-active',
+					className: 'pinswitch-panel__tab is-active',
 					'data-tab': 'pinned',
 					text: cfg.i18n.pinned || 'Pinned',
 					onClick: function (e) {
@@ -399,7 +399,7 @@
 				}),
 				el('button', {
 					type: 'button',
-					className: 'qswitch-panel__tab',
+					className: 'pinswitch-panel__tab',
 					'data-tab': 'all',
 					text: cfg.i18n.all || 'All users',
 					onClick: function (e) {
@@ -409,7 +409,7 @@
 					},
 				}),
 			]),
-			el('div', { className: 'qswitch-panel__search', style: 'display:none' }, [
+			el('div', { className: 'pinswitch-panel__search', style: 'display:none' }, [
 				el('input', {
 					type: 'search',
 					placeholder: cfg.i18n.searchPlaceholder || 'Search username or email…',
@@ -427,7 +427,7 @@
 					},
 				}),
 			]),
-			el('div', { id: 'qswitch-panel-list', className: 'qswitch-panel__list' }),
+			el('div', { id: 'pinswitch-panel-list', className: 'pinswitch-panel__list' }),
 		]);
 
 		item.style.position = 'relative';
@@ -457,7 +457,7 @@
 			scheduleClose();
 		});
 
-		var list = panel.querySelector('#qswitch-panel-list');
+		var list = panel.querySelector('#pinswitch-panel-list');
 		list.addEventListener('scroll', function () {
 			if (state.loading || !state.hasMore) {
 				return;

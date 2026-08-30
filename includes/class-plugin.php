@@ -2,14 +2,14 @@
 /**
  * Plugin bootstrap.
  *
- * @package QuickSwitch
+ * @package PinSwitch_User_Switcher
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class QSwitch_Plugin {
+final class PinSwitch_Plugin {
 
 	private static ?self $instance = null;
 
@@ -24,20 +24,20 @@ final class QSwitch_Plugin {
 	public function boot(): void {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 
-		QSwitch_Switching::boot();
-		QSwitch_Pins::boot();
-		QSwitch_Admin_Post::boot();
-		QSwitch_Ajax::boot();
-		QSwitch_Admin_Bar::boot();
-		QSwitch_Users_Table::boot();
-		QSwitch_User_Profile::boot();
+		PinSwitch_Switching::boot();
+		PinSwitch_Pins::boot();
+		PinSwitch_Admin_Post::boot();
+		PinSwitch_Ajax::boot();
+		PinSwitch_Admin_Bar::boot();
+		PinSwitch_Users_Table::boot();
+		PinSwitch_User_Profile::boot();
 	}
 
 	public function load_textdomain(): void {
 		load_plugin_textdomain(
-			'quickswitch',
+			'pinswitch-user-switcher',
 			false,
-			dirname( plugin_basename( QSWITCH_FILE ) ) . '/languages'
+			dirname( plugin_basename( PINSWITCH_FILE ) ) . '/languages'
 		);
 	}
 }

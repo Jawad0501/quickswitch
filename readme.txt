@@ -1,10 +1,10 @@
-=== QuickSwitch ===
+=== PinSwitch User Switcher ===
 Contributors: jawad0501
 Tags: user switching, development, testing, roles, capabilities
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.1.5
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,9 +12,9 @@ Pin test users and switch between WordPress accounts in one click while developi
 
 == Description ==
 
-QuickSwitch helps plugin developers test role-based behavior without repeatedly hunting through the Users screen.
+PinSwitch User Switcher helps plugin developers test role-based behavior without repeatedly hunting through the Users screen.
 
-When you are building a plugin, you often need to jump between an admin account and a handful of fixed test users (Editor, Subscriber, Customer, etc.). Existing user switching plugins work, but they still make you find the same accounts in the user list every time. QuickSwitch adds a pinning layer on top of a complete, standalone switching implementation.
+When you are building a plugin, you often need to jump between an admin account and a handful of fixed test users (Editor, Subscriber, Customer, etc.). Existing user switching plugins work, but they still make you find the same accounts in the user list every time. PinSwitch User Switcher adds a pinning layer on top of a complete, standalone switching implementation.
 
 = Switching =
 
@@ -48,34 +48,34 @@ When you are building a plugin, you often need to jump between an admin account 
 
 Users with the `edit_users` capability can pin users and switch accounts. Switch back uses cookie authentication and does not require the switched-in user to have elevated capabilities.
 
-QuickSwitch is intentionally small: no audit log, no multisite-specific code, no CLI, no REST API layer, and no dependency on other switching plugins.
+PinSwitch User Switcher is intentionally small: no audit log, no multisite-specific code, no CLI, no REST API layer, and no dependency on other switching plugins.
 
 == Installation ==
 
-1. Upload the plugin files to `/wp-content/plugins/quickswitch`, or install through the WordPress plugins screen.
+1. Upload the plugin files to `/wp-content/plugins/pinswitch-user-switcher`, or install through the WordPress plugins screen.
 2. Activate the plugin through the **Plugins** screen.
 3. Go to **Users**, pin your test accounts using the **Pin** row action.
 4. During testing, open **Switch User** from the admin bar and click a pinned account.
 
 == Frequently Asked Questions ==
 
-= Who can use QuickSwitch? =
+= Who can use PinSwitch User Switcher? =
 
 Users with the `edit_users` capability can pin users, open the Switch User panel, and switch into other accounts.
 
 = Does this replace User Switching? =
 
-Yes. QuickSwitch is standalone. It implements its own switch-to, switch-back, and switch-off flow using WordPress auth cookies and session tokens, so you do not need another switching plugin installed.
+Yes. PinSwitch User Switcher is standalone. It implements its own switch-to, switch-back, and switch-off flow using WordPress auth cookies and session tokens, so you do not need another switching plugin installed.
 
 = What happens if I switch to a user who cannot access the current admin page? =
 
-QuickSwitch checks whether the switched-in user can access the page you were on. If not, they are redirected to the admin dashboard (if they have admin access) or the site homepage — not an "Sorry, you are not allowed" error screen.
+PinSwitch User Switcher checks whether the switched-in user can access the page you were on. If not, they are redirected to the admin dashboard (if they have admin access) or the site homepage — not an "Sorry, you are not allowed" error screen.
 
 = Are pins shared between admins? =
 
 No. Pins are stored against your own user account and are visible only to you.
 
-= Does QuickSwitch work on Multisite? =
+= Does PinSwitch User Switcher work on Multisite? =
 
 Multisite is not a priority for v1. It may work incidentally but is not tested or supported.
 
@@ -85,6 +85,10 @@ Multisite is not a priority for v1. It may work incidentally but is not tested o
 2. Switch To button on user edit screen
 
 == Changelog ==
+
+= 1.2.0 =
+* Rename plugin to PinSwitch User Switcher (slug: pinswitch-user-switcher)
+* Migrate pinned users from the former QuickSwitch usermeta key
 
 = 1.1.5 =
 * Fix admin bar panel JavaScript error that showed "No users found"
@@ -106,7 +110,7 @@ Multisite is not a priority for v1. It may work incidentally but is not tested o
 * Allow switch back while logged out via admin-post nopriv handler
 
 = 1.1.0 =
-* Remove Users → QuickSwitch settings page; pin and unpin from the Users list or admin bar panel
+* Remove Users → PinSwitch User Switcher settings page; pin and unpin from the Users list or admin bar panel
 * Show pin/unpin success notices globally in wp-admin
 
 = 1.0.6 =
@@ -126,13 +130,16 @@ Multisite is not a priority for v1. It may work incidentally but is not tested o
 
 = 1.0.1 =
 * Replace native admin bar submenu with custom scrollable panel (tabs, search, infinite scroll)
-* Redesign Users → QuickSwitch settings page empty state and pin table
+* Redesign Users → PinSwitch User Switcher settings page empty state and pin table
 * Fix admin bar layout conflicts with WordPress core styles
 
 = 1.0.0 =
 * Initial release: standalone switching, pinning, admin bar menu, settings page, Users list row actions
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Renamed to PinSwitch User Switcher. Re-activate after updating the plugin folder/slug.
 
 = 1.1.5 =
 Fixes the admin bar user list failing to load.

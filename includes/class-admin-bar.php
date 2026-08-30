@@ -2,14 +2,14 @@
 /**
  * Admin bar quick switch menu + custom panel.
  *
- * @package QuickSwitch
+ * @package PinSwitch_User_Switcher
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class QSwitch_Admin_Bar {
+final class PinSwitch_Admin_Bar {
 
 	public static function boot(): void {
 		add_action( 'admin_bar_menu', array( __CLASS__, 'register_nodes' ), 80 );
@@ -17,44 +17,44 @@ final class QSwitch_Admin_Bar {
 	}
 
 	public static function enqueue_assets(): void {
-		if ( ! is_admin() || ! is_admin_bar_showing() || ! QSwitch_Switching::can_manage() ) {
+		if ( ! is_admin() || ! is_admin_bar_showing() || ! PinSwitch_Switching::can_manage() ) {
 			return;
 		}
 
 		wp_enqueue_style(
-			'qswitch-admin-bar',
-			plugins_url( 'assets/admin-bar.css', QSWITCH_FILE ),
+			'pinswitch-admin-bar',
+			plugins_url( 'assets/admin-bar.css', PINSWITCH_FILE ),
 			array(),
-			QSWITCH_VERSION
+			PINSWITCH_VERSION
 		);
 
 		wp_enqueue_script(
-			'qswitch-admin-bar',
-			plugins_url( 'assets/admin-bar.js', QSWITCH_FILE ),
+			'pinswitch-admin-bar',
+			plugins_url( 'assets/admin-bar.js', PINSWITCH_FILE ),
 			array(),
-			QSWITCH_VERSION,
+			PINSWITCH_VERSION,
 			true
 		);
 
 		wp_localize_script(
-			'qswitch-admin-bar',
-			'qswitchPanel',
+			'pinswitch-admin-bar',
+			'pinswitchPanel',
 			array(
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-				'nonce'   => wp_create_nonce( 'qswitch_panel' ),
+				'nonce'   => wp_create_nonce( 'pinswitch_panel' ),
 				'i18n'    => array(
-					'pinned'            => __( 'Pinned', 'quickswitch' ),
-					'all'               => __( 'All users', 'quickswitch' ),
-					'searchPlaceholder' => __( 'Search username or email…', 'quickswitch' ),
-					'switchTo'          => __( 'Switch To', 'quickswitch' ),
-					'pin'               => __( 'Pin', 'quickswitch' ),
-					'pinUser'           => __( 'Pin user', 'quickswitch' ),
-					'unpin'             => __( 'Unpin', 'quickswitch' ),
-					'unpinUser'         => __( 'Unpin user', 'quickswitch' ),
-					'loading'           => __( 'Loading…', 'quickswitch' ),
-					'emptyPinned'       => __( 'No pinned users yet. Pin accounts from the Users screen or the All users tab.', 'quickswitch' ),
-					'emptySearch'       => __( 'No users found.', 'quickswitch' ),
-					'end'               => __( 'End of list', 'quickswitch' ),
+					'pinned'            => __( 'Pinned', 'pinswitch-user-switcher' ),
+					'all'               => __( 'All users', 'pinswitch-user-switcher' ),
+					'searchPlaceholder' => __( 'Search username or email…', 'pinswitch-user-switcher' ),
+					'switchTo'          => __( 'Switch To', 'pinswitch-user-switcher' ),
+					'pin'               => __( 'Pin', 'pinswitch-user-switcher' ),
+					'pinUser'           => __( 'Pin user', 'pinswitch-user-switcher' ),
+					'unpin'             => __( 'Unpin', 'pinswitch-user-switcher' ),
+					'unpinUser'         => __( 'Unpin user', 'pinswitch-user-switcher' ),
+					'loading'           => __( 'Loading…', 'pinswitch-user-switcher' ),
+					'emptyPinned'       => __( 'No pinned users yet. Pin accounts from the Users screen or the All users tab.', 'pinswitch-user-switcher' ),
+					'emptySearch'       => __( 'No users found.', 'pinswitch-user-switcher' ),
+					'end'               => __( 'End of list', 'pinswitch-user-switcher' ),
 				),
 			)
 		);
@@ -65,7 +65,7 @@ final class QSwitch_Admin_Bar {
 			return;
 		}
 
-		$old_user = QSwitch_Switching::get_old_user();
+		$old_user = PinSwitch_Switching::get_old_user();
 
 		if ( $old_user instanceof WP_User ) {
 			self::register_switched_nodes( $admin_bar, $old_user );
@@ -73,14 +73,14 @@ final class QSwitch_Admin_Bar {
 
 		self::register_profile_menu_nodes( $admin_bar, $old_user );
 
-		if ( is_admin() && QSwitch_Switching::can_manage() ) {
+		if ( is_admin() && PinSwitch_Switching::can_manage() ) {
 			$admin_bar->add_node(
 				array(
-					'id'    => 'qswitch-menu',
-					'title' => __( 'Switch User', 'quickswitch' ),
+					'id'    => 'pinswitch-menu',
+					'title' => __( 'Switch User', 'pinswitch-user-switcher' ),
 					'href'  => '#',
 					'meta'  => array(
-						'class' => 'qswitch-menu-trigger',
+						'class' => 'pinswitch-menu-trigger',
 					),
 				)
 			);
@@ -92,34 +92,34 @@ final class QSwitch_Admin_Bar {
 
 		$admin_bar->add_node(
 			array(
-				'id'    => 'qswitch-switched',
+				'id'    => 'pinswitch-switched',
 				'title' => sprintf(
 					/* translators: %s: current switched-in user display name */
-					__( 'Switched to %s', 'quickswitch' ),
+					__( 'Switched to %s', 'pinswitch-user-switcher' ),
 					$current->display_name
 				),
 				'href'  => false,
 				'meta'  => array(
-					'class' => 'qswitch-switched',
+					'class' => 'pinswitch-switched',
 				),
 			)
 		);
 
 		$admin_bar->add_node(
 			array(
-				'parent' => 'qswitch-switched',
-				'id'     => 'qswitch-switch-back',
-				'title'  => QSwitch_Switching::switch_back_message( $old_user ),
-				'href'   => QSwitch_Switching::switch_back_link_url( $old_user ),
+				'parent' => 'pinswitch-switched',
+				'id'     => 'pinswitch-switch-back',
+				'title'  => PinSwitch_Switching::switch_back_message( $old_user ),
+				'href'   => PinSwitch_Switching::switch_back_link_url( $old_user ),
 			)
 		);
 
 		$admin_bar->add_node(
 			array(
-				'parent' => 'qswitch-switched',
-				'id'     => 'qswitch-switch-off',
-				'title'  => __( 'Switch Off', 'quickswitch' ),
-				'href'   => QSwitch_Switching::switch_off_link_url(),
+				'parent' => 'pinswitch-switched',
+				'id'     => 'pinswitch-switch-off',
+				'title'  => __( 'Switch Off', 'pinswitch-user-switcher' ),
+				'href'   => PinSwitch_Switching::switch_off_link_url(),
 			)
 		);
 	}
@@ -133,16 +133,16 @@ final class QSwitch_Admin_Bar {
 		}
 
 		// When switched, Switch Back / Switch Off live under "Switched to …" in the admin bar.
-		if ( $old_user instanceof WP_User || ! QSwitch_Switching::can_manage() ) {
+		if ( $old_user instanceof WP_User || ! PinSwitch_Switching::can_manage() ) {
 			return;
 		}
 
 		$admin_bar->add_node(
 			array(
 				'parent' => 'user-actions',
-				'id'     => 'qswitch-profile-switch-off',
-				'title'  => __( 'Switch Off', 'quickswitch' ),
-				'href'   => QSwitch_Switching::switch_off_link_url(),
+				'id'     => 'pinswitch-profile-switch-off',
+				'title'  => __( 'Switch Off', 'pinswitch-user-switcher' ),
+				'href'   => PinSwitch_Switching::switch_off_link_url(),
 			)
 		);
 	}

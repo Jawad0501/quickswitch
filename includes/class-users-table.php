@@ -2,14 +2,14 @@
 /**
  * Users list screen row actions.
  *
- * @package QuickSwitch
+ * @package PinSwitch_User_Switcher
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class QSwitch_Users_Table {
+final class PinSwitch_Users_Table {
 
 	public static function boot(): void {
 		add_filter( 'user_row_actions', array( __CLASS__, 'filter_row_actions' ), 20, 2 );
@@ -20,7 +20,7 @@ final class QSwitch_Users_Table {
 	 * @return array<string, string>
 	 */
 	public static function filter_row_actions( array $actions, WP_User $user ): array {
-		if ( ! QSwitch_Switching::can_manage() ) {
+		if ( ! PinSwitch_Switching::can_manage() ) {
 			return $actions;
 		}
 
@@ -28,32 +28,32 @@ final class QSwitch_Users_Table {
 			return $actions;
 		}
 
-		if ( QSwitch_Switching::can_switch_to( (int) $user->ID ) ) {
-			$actions['qswitch_switch_to'] = sprintf(
+		if ( PinSwitch_Switching::can_switch_to( (int) $user->ID ) ) {
+			$actions['pinswitch_switch_to'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url(
 					add_query_arg(
 						array(
 							'redirect_to' => admin_url( 'users.php' ),
 						),
-						QSwitch_Switching::switch_to_url( (int) $user->ID )
+						PinSwitch_Switching::switch_to_url( (int) $user->ID )
 					)
 				),
-				esc_html__( 'Switch To', 'quickswitch' )
+				esc_html__( 'Switch To', 'pinswitch-user-switcher' )
 			);
 		}
 
-		if ( QSwitch_Pins::is_pinned( (int) $user->ID ) ) {
-			$actions['qswitch_unpin'] = sprintf(
+		if ( PinSwitch_Pins::is_pinned( (int) $user->ID ) ) {
+			$actions['pinswitch_unpin'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( QSwitch_Pins::unpin_url( (int) $user->ID ) ),
-				esc_html__( 'Unpin', 'quickswitch' )
+				esc_url( PinSwitch_Pins::unpin_url( (int) $user->ID ) ),
+				esc_html__( 'Unpin', 'pinswitch-user-switcher' )
 			);
 		} else {
-			$actions['qswitch_pin'] = sprintf(
+			$actions['pinswitch_pin'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( QSwitch_Pins::pin_url( (int) $user->ID ) ),
-				esc_html__( 'Pin', 'quickswitch' )
+				esc_url( PinSwitch_Pins::pin_url( (int) $user->ID ) ),
+				esc_html__( 'Pin', 'pinswitch-user-switcher' )
 			);
 		}
 

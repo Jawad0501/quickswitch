@@ -2,16 +2,16 @@
 /**
  * Core user switching via WordPress auth cookies and session tokens.
  *
- * @package QuickSwitch
+ * @package PinSwitch_User_Switcher
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class QSwitch_Switching {
+final class PinSwitch_Switching {
 
-	public const APPLICATION = 'WordPress/QuickSwitch';
+	public const APPLICATION = 'WordPress/PinSwitch';
 
 	public static function boot(): void {
 		self::define_cookies();
@@ -27,16 +27,16 @@ final class QSwitch_Switching {
 	}
 
 	public static function define_cookies(): void {
-		if ( ! defined( 'QSWITCH_COOKIE' ) ) {
-			define( 'QSWITCH_COOKIE', 'wordpress_qswitch_' . COOKIEHASH );
+		if ( ! defined( 'PINSWITCH_COOKIE' ) ) {
+			define( 'PINSWITCH_COOKIE', 'wordpress_pinswitch_' . COOKIEHASH );
 		}
 
-		if ( ! defined( 'QSWITCH_SECURE_COOKIE' ) ) {
-			define( 'QSWITCH_SECURE_COOKIE', 'wordpress_qswitch_secure_' . COOKIEHASH );
+		if ( ! defined( 'PINSWITCH_SECURE_COOKIE' ) ) {
+			define( 'PINSWITCH_SECURE_COOKIE', 'wordpress_pinswitch_secure_' . COOKIEHASH );
 		}
 
-		if ( ! defined( 'QSWITCH_OLDUSER_COOKIE' ) ) {
-			define( 'QSWITCH_OLDUSER_COOKIE', 'wordpress_qswitch_olduser_' . COOKIEHASH );
+		if ( ! defined( 'PINSWITCH_OLDUSER_COOKIE' ) ) {
+			define( 'PINSWITCH_OLDUSER_COOKIE', 'wordpress_pinswitch_olduser_' . COOKIEHASH );
 		}
 	}
 
@@ -172,12 +172,12 @@ final class QSwitch_Switching {
 		return self::nonce_action_url(
 			add_query_arg(
 				array(
-					'action'  => 'qswitch_switch_to',
+					'action'  => 'pinswitch_switch_to',
 					'user_id' => $user_id,
 				),
 				admin_url( 'admin-post.php' )
 			),
-			'qswitch_switch_to_' . $user_id
+			'pinswitch_switch_to_' . $user_id
 		);
 	}
 
@@ -185,11 +185,11 @@ final class QSwitch_Switching {
 		return self::nonce_action_url(
 			add_query_arg(
 				array(
-					'action' => 'qswitch_switch_back',
+					'action' => 'pinswitch_switch_back',
 				),
 				admin_url( 'admin-post.php' )
 			),
-			'qswitch_switch_back_' . $user->ID
+			'pinswitch_switch_back_' . $user->ID
 		);
 	}
 
@@ -197,11 +197,11 @@ final class QSwitch_Switching {
 		return self::nonce_action_url(
 			add_query_arg(
 				array(
-					'action' => 'qswitch_switch_off',
+					'action' => 'pinswitch_switch_off',
 				),
 				admin_url( 'admin-post.php' )
 			),
-			'qswitch_switch_off'
+			'pinswitch_switch_off'
 		);
 	}
 
@@ -333,7 +333,7 @@ final class QSwitch_Switching {
 	public static function switched_to_message( WP_User $user ): string {
 		return sprintf(
 			/* translators: %s: user display name */
-			__( 'Switched to %s.', 'quickswitch' ),
+			__( 'Switched to %s.', 'pinswitch-user-switcher' ),
 			$user->display_name
 		);
 	}
@@ -341,7 +341,7 @@ final class QSwitch_Switching {
 	public static function switch_back_message( WP_User $user ): string {
 		return sprintf(
 			/* translators: %s: user display name */
-			__( 'Switch back to %s', 'quickswitch' ),
+			__( 'Switch back to %s', 'pinswitch-user-switcher' ),
 			$user->display_name
 		);
 	}
@@ -349,7 +349,7 @@ final class QSwitch_Switching {
 	public static function switched_back_message( WP_User $user ): string {
 		return sprintf(
 			/* translators: %s: user display name */
-			__( 'Switched back to %s.', 'quickswitch' ),
+			__( 'Switched back to %s.', 'pinswitch-user-switcher' ),
 			$user->display_name
 		);
 	}
@@ -358,11 +358,11 @@ final class QSwitch_Switching {
 		return array_merge(
 			$args,
 			array(
-				'qswitch_switched',
-				'qswitch_switched_back',
-				'qswitch_switched_off',
-				'qswitch_pinned',
-				'qswitch_unpinned',
+				'pinswitch_switched',
+				'pinswitch_switched_back',
+				'pinswitch_switched_off',
+				'pinswitch_pinned',
+				'pinswitch_unpinned',
 			)
 		);
 	}
@@ -403,7 +403,7 @@ final class QSwitch_Switching {
 			);
 		}
 
-		$message .= '<p class="message" id="qswitch-switch-on">';
+		$message .= '<p class="message" id="pinswitch-switch-on">';
 		$message .= '<span class="dashicons dashicons-admin-users" style="color:#56c234" aria-hidden="true"></span> ';
 		$message .= sprintf(
 			'<a href="%1$s">%2$s</a>',
@@ -423,7 +423,7 @@ final class QSwitch_Switching {
 		}
 
 		printf(
-			'<li id="qswitch-switch-on"><a href="%s">%s</a></li>',
+			'<li id="pinswitch-switch-on"><a href="%s">%s</a></li>',
 			esc_url( self::switch_back_link_url( $old_user ) ),
 			esc_html( self::switch_back_message( $old_user ) )
 		);
@@ -439,7 +439,7 @@ final class QSwitch_Switching {
 		 *
 		 * @param bool $show Whether to show the link.
 		 */
-		if ( ! apply_filters( 'quickswitch_show_footer_switch_back', true ) ) {
+		if ( ! apply_filters( 'pinswitch_show_footer_switch_back', true ) ) {
 			return;
 		}
 
@@ -450,7 +450,7 @@ final class QSwitch_Switching {
 		}
 
 		printf(
-			'<p id="qswitch-switch-on" style="%s"><a href="%s" style="%s">%s</a></p>',
+			'<p id="pinswitch-switch-on" style="%s"><a href="%s" style="%s">%s</a></p>',
 			'position: fixed; bottom: 40px; padding: 0; margin: 0; left: 10px; font-size: 13px; z-index: 99999;',
 			esc_url( self::switch_back_link_url( $old_user ) ),
 			'padding: 9px 12px; background: #3858e9; color: #fff; text-decoration: none; border-radius: 2px;',
@@ -463,7 +463,7 @@ final class QSwitch_Switching {
 		$old_user = self::get_old_user();
 
 		if ( $old_user instanceof WP_User ) {
-			$message = isset( $_GET['qswitch_switched'] ) ? self::switched_to_message( $user ) . ' ' : '';
+			$message = isset( $_GET['pinswitch_switched'] ) ? self::switched_to_message( $user ) . ' ' : '';
 			$message .= sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( self::switch_back_link_url( $old_user ) ),
@@ -485,8 +485,8 @@ final class QSwitch_Switching {
 			return;
 		}
 
-		if ( isset( $_GET['qswitch_switched'] ) ) {
-			$text = isset( $_GET['qswitch_switched_back'] )
+		if ( isset( $_GET['pinswitch_switched'] ) ) {
+			$text = isset( $_GET['pinswitch_switched_back'] )
 				? self::switched_back_message( $user )
 				: self::switched_to_message( $user );
 
@@ -517,10 +517,10 @@ final class QSwitch_Switching {
 		$olduser_cookie        = wp_generate_auth_cookie( $old_user_id, $expiration, 'logged_in', $token );
 
 		if ( $secure_auth_cookie ) {
-			$auth_cookie_name = QSWITCH_SECURE_COOKIE;
+			$auth_cookie_name = PINSWITCH_SECURE_COOKIE;
 			$scheme           = 'secure_auth';
 		} else {
-			$auth_cookie_name = QSWITCH_COOKIE;
+			$auth_cookie_name = PINSWITCH_COOKIE;
 			$scheme           = 'auth';
 		}
 
@@ -536,12 +536,12 @@ final class QSwitch_Switching {
 			return;
 		}
 
-		if ( ! apply_filters( 'quickswitch_send_auth_cookies', true ) ) {
+		if ( ! apply_filters( 'pinswitch_send_auth_cookies', true ) ) {
 			return;
 		}
 
 		setcookie( $auth_cookie_name, $encoded, $expiration, SITECOOKIEPATH, COOKIE_DOMAIN, $secure_auth_cookie, true );
-		setcookie( QSWITCH_OLDUSER_COOKIE, $olduser_cookie, $expiration, COOKIEPATH, COOKIE_DOMAIN, $secure_olduser_cookie, true );
+		setcookie( PINSWITCH_OLDUSER_COOKIE, $olduser_cookie, $expiration, COOKIEPATH, COOKIE_DOMAIN, $secure_olduser_cookie, true );
 	}
 
 	public static function clear_olduser_cookie( bool $clear_all = true ): void {
@@ -567,30 +567,30 @@ final class QSwitch_Switching {
 			return;
 		}
 
-		if ( ! apply_filters( 'quickswitch_send_auth_cookies', true ) ) {
+		if ( ! apply_filters( 'pinswitch_send_auth_cookies', true ) ) {
 			return;
 		}
 
 		$expire = time() - YEAR_IN_SECONDS;
 
-		setcookie( QSWITCH_COOKIE, ' ', $expire, SITECOOKIEPATH, COOKIE_DOMAIN );
-		setcookie( QSWITCH_SECURE_COOKIE, ' ', $expire, SITECOOKIEPATH, COOKIE_DOMAIN );
-		setcookie( QSWITCH_OLDUSER_COOKIE, ' ', $expire, COOKIEPATH, COOKIE_DOMAIN );
+		setcookie( PINSWITCH_COOKIE, ' ', $expire, SITECOOKIEPATH, COOKIE_DOMAIN );
+		setcookie( PINSWITCH_SECURE_COOKIE, ' ', $expire, SITECOOKIEPATH, COOKIE_DOMAIN );
+		setcookie( PINSWITCH_OLDUSER_COOKIE, ' ', $expire, COOKIEPATH, COOKIE_DOMAIN );
 	}
 
 	private static function get_olduser_cookie(): string|false {
-		if ( ! isset( $_COOKIE[ QSWITCH_OLDUSER_COOKIE ] ) ) {
+		if ( ! isset( $_COOKIE[ PINSWITCH_OLDUSER_COOKIE ] ) ) {
 			return false;
 		}
 
-		return wp_unslash( (string) $_COOKIE[ QSWITCH_OLDUSER_COOKIE ] );
+		return wp_unslash( (string) $_COOKIE[ PINSWITCH_OLDUSER_COOKIE ] );
 	}
 
 	/**
 	 * @return list<string>
 	 */
 	private static function get_auth_cookie(): array {
-		$auth_cookie_name = self::secure_auth_cookie() ? QSWITCH_SECURE_COOKIE : QSWITCH_COOKIE;
+		$auth_cookie_name = self::secure_auth_cookie() ? PINSWITCH_SECURE_COOKIE : PINSWITCH_COOKIE;
 		$cookie           = array();
 
 		if ( isset( $_COOKIE[ $auth_cookie_name ] ) && is_string( $_COOKIE[ $auth_cookie_name ] ) ) {

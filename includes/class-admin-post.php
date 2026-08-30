@@ -2,29 +2,29 @@
 /**
  * admin-post.php action handlers.
  *
- * @package QuickSwitch
+ * @package PinSwitch_User_Switcher
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-final class QSwitch_Admin_Post {
+final class PinSwitch_Admin_Post {
 
 	public static function boot(): void {
 		$actions = array(
-			'qswitch_pin',
-			'qswitch_unpin',
-			'qswitch_switch_to',
-			'qswitch_switch_back',
-			'qswitch_switch_off',
+			'pinswitch_pin',
+			'pinswitch_unpin',
+			'pinswitch_switch_to',
+			'pinswitch_switch_back',
+			'pinswitch_switch_off',
 		);
 
 		foreach ( $actions as $action ) {
-			add_action( 'admin_post_' . $action, array( __CLASS__, 'handle_' . str_replace( 'qswitch_', '', $action ) ) );
+			add_action( 'admin_post_' . $action, array( __CLASS__, 'handle_' . str_replace( 'pinswitch_', '', $action ) ) );
 		}
 
-		add_action( 'admin_post_nopriv_qswitch_switch_back', array( __CLASS__, 'handle_switch_back' ) );
+		add_action( 'admin_post_nopriv_pinswitch_switch_back', array( __CLASS__, 'handle_switch_back' ) );
 	}
 
 	public static function handle_pin(): void {
@@ -32,17 +32,17 @@ final class QSwitch_Admin_Post {
 
 		$user_id = absint( $_REQUEST['user_id'] ?? 0 );
 
-		check_admin_referer( 'qswitch_pin_' . $user_id );
+		check_admin_referer( 'pinswitch_pin_' . $user_id );
 
 		if ( ! get_userdata( $user_id ) ) {
-			wp_die( esc_html__( 'User not found.', 'quickswitch' ), 404 );
+			wp_die( esc_html__( 'User not found.', 'pinswitch-user-switcher' ), 404 );
 		}
 
-		QSwitch_Pins::pin( $user_id );
+		PinSwitch_Pins::pin( $user_id );
 
 		self::redirect_back(
 			array(
-				'qswitch_pinned' => '1',
+				'pinswitch_pinned' => '1',
 			)
 		);
 	}
@@ -52,13 +52,13 @@ final class QSwitch_Admin_Post {
 
 		$user_id = absint( $_REQUEST['user_id'] ?? 0 );
 
-		check_admin_referer( 'qswitch_unpin_' . $user_id );
+		check_admin_referer( 'pinswitch_unpin_' . $user_id );
 
-		QSwitch_Pins::unpin( $user_id );
+		PinSwitch_Pins::unpin( $user_id );
 
 		self::redirect_back(
 			array(
-				'qswitch_unpinned' => '1',
+				'pinswitch_unpinned' => '1',
 			)
 		);
 	}
@@ -68,75 +68,75 @@ final class QSwitch_Admin_Post {
 
 		$user_id = absint( $_REQUEST['user_id'] ?? 0 );
 
-		check_admin_referer( 'qswitch_switch_to_' . $user_id );
+		check_admin_referer( 'pinswitch_switch_to_' . $user_id );
 
-		if ( ! QSwitch_Switching::can_switch_to( $user_id ) ) {
-			wp_die( esc_html__( 'Could not switch users.', 'quickswitch' ), 403 );
+		if ( ! PinSwitch_Switching::can_switch_to( $user_id ) ) {
+			wp_die( esc_html__( 'Could not switch users.', 'pinswitch-user-switcher' ), 403 );
 		}
 
-		$user = QSwitch_Switching::switch_to( $user_id, QSwitch_Switching::remember() );
+		$user = PinSwitch_Switching::switch_to( $user_id, PinSwitch_Switching::remember() );
 
 		if ( ! $user ) {
-			wp_die( esc_html__( 'Could not switch users.', 'quickswitch' ), 404 );
+			wp_die( esc_html__( 'Could not switch users.', 'pinswitch-user-switcher' ), 404 );
 		}
 
-		$redirect_to = QSwitch_Switching::redirect_after_switch( $user );
+		$redirect_to = PinSwitch_Switching::redirect_after_switch( $user );
 
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'qswitch_switched' => '1',
+					'pinswitch_switched' => '1',
 				),
 				$redirect_to
 			),
 			302,
-			QSwitch_Switching::APPLICATION
+			PinSwitch_Switching::APPLICATION
 		);
 		exit;
 	}
 
 	public static function handle_switch_back(): void {
-		$old_user = QSwitch_Switching::get_old_user();
+		$old_user = PinSwitch_Switching::get_old_user();
 
 		if ( ! ( $old_user instanceof WP_User ) ) {
-			wp_die( esc_html__( 'Could not switch users.', 'quickswitch' ), 400 );
+			wp_die( esc_html__( 'Could not switch users.', 'pinswitch-user-switcher' ), 400 );
 		}
 
-		if ( ! QSwitch_Switching::authenticate_old_user( $old_user ) ) {
-			wp_die( esc_html__( 'Could not switch users.', 'quickswitch' ), 403 );
+		if ( ! PinSwitch_Switching::authenticate_old_user( $old_user ) ) {
+			wp_die( esc_html__( 'Could not switch users.', 'pinswitch-user-switcher' ), 403 );
 		}
 
-		check_admin_referer( 'qswitch_switch_back_' . $old_user->ID );
+		check_admin_referer( 'pinswitch_switch_back_' . $old_user->ID );
 
-		if ( ! QSwitch_Switching::switch_to( $old_user->ID, QSwitch_Switching::remember(), false ) ) {
-			wp_die( esc_html__( 'Could not switch users.', 'quickswitch' ), 404 );
+		if ( ! PinSwitch_Switching::switch_to( $old_user->ID, PinSwitch_Switching::remember(), false ) ) {
+			wp_die( esc_html__( 'Could not switch users.', 'pinswitch-user-switcher' ), 404 );
 		}
 
-		$redirect_to = QSwitch_Switching::redirect_after_switch( $old_user );
+		$redirect_to = PinSwitch_Switching::redirect_after_switch( $old_user );
 
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'qswitch_switched'      => '1',
-					'qswitch_switched_back' => '1',
+					'pinswitch_switched'      => '1',
+					'pinswitch_switched_back' => '1',
 				),
 				$redirect_to
 			),
 			302,
-			QSwitch_Switching::APPLICATION
+			PinSwitch_Switching::APPLICATION
 		);
 		exit;
 	}
 
 	public static function handle_switch_off(): void {
-		if ( ! QSwitch_Switching::can_switch_off() ) {
-			wp_die( esc_html__( 'Could not switch off.', 'quickswitch' ), 403 );
+		if ( ! PinSwitch_Switching::can_switch_off() ) {
+			wp_die( esc_html__( 'Could not switch off.', 'pinswitch-user-switcher' ), 403 );
 		}
 
-		check_admin_referer( 'qswitch_switch_off' );
+		check_admin_referer( 'pinswitch_switch_off' );
 
-		if ( ! QSwitch_Switching::switch_off() ) {
-			wp_die( esc_html__( 'Could not switch off.', 'quickswitch' ), 403 );
+		if ( ! PinSwitch_Switching::switch_off() ) {
+			wp_die( esc_html__( 'Could not switch off.', 'pinswitch-user-switcher' ), 403 );
 		}
 
 		$redirect_to = home_url();
@@ -148,19 +148,19 @@ final class QSwitch_Admin_Post {
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'qswitch_switched_off' => '1',
+					'pinswitch_switched_off' => '1',
 				),
 				$redirect_to
 			),
 			302,
-			QSwitch_Switching::APPLICATION
+			PinSwitch_Switching::APPLICATION
 		);
 		exit;
 	}
 
 	private static function require_manage(): void {
-		if ( ! QSwitch_Switching::can_manage() ) {
-			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'quickswitch' ), 403 );
+		if ( ! PinSwitch_Switching::can_manage() ) {
+			wp_die( esc_html__( 'Sorry, you are not allowed to do that.', 'pinswitch-user-switcher' ), 403 );
 		}
 	}
 
